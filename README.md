@@ -126,6 +126,43 @@ jobs:
             LICENSE
 ```
 
+Below is an example of uploading more than one asset, filenames readed from filelist
+
+```yaml
+name: Main
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        shell: bash
+        run: |
+          built_files=$(find src/target/release/ -type f \( \
+           -iname \*.exe -o \
+           -iname \*.msi -o \
+           -iname \*.zip -o \
+           -iname \*.deb -o \
+           -iname \*.gz  -o \
+           -iname \*.AppImage -o \
+           -iname \*.dmg -o \
+           -iname \*.app \))
+          built_files_string=$(echo $built_files | tr '//' '/')
+          echo "$built_files_string"
+          echo "$built_files" > 'filelist.txt'
+      - name: Test
+        run: cat filelist.txt
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          filelist: filelist.txt
+```
+
 > **⚠️ Note:** Notice the `|` in the yaml syntax above ☝️. That let's you effectively declare a multi-line yaml string. You can learn more about multi-line yaml syntax [here](https://yaml-multiline.info)
 
 > **⚠️ Note for Windows:** Paths must use `/` as a separator, not `\`, as `\` is used to escape characters with special meaning in the pattern; for example, instead of specifying `D:\Foo.txt`, you must specify `D:/Foo.txt`. If you're using PowerShell, you can do this with `$Path = $Path -replace '\\','/'`
@@ -174,6 +211,7 @@ The following are optional as `step.with` keys
 | `draft`                    | Boolean | Indicator of whether or not this release is a draft                                                                                                                                                                                                                                                                                                                                                                                             |
 | `prerelease`               | Boolean | Indicator of whether or not is a prerelease                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `files`                    | String  | Newline-delimited globs of paths to assets to upload for release                                                                                                                                                                                                                                                                                                                                                                                |
+| `filelist`                 | String  | Filelist with path globs for asset files to upload                                                                                                                                                                                                                                                                                                                                                                                              |
 | `name`                     | String  | Name of the release. defaults to tag name                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `tag_name`                 | String  | Name of a tag. defaults to `github.ref`                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `fail_on_unmatched_files`  | Boolean | Indicator of whether to fail if any of the `files` globs match nothing                                                                                                                                                                                                                                                                                                                                                                          |
