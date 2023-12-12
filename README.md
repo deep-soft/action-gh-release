@@ -157,7 +157,7 @@ jobs:
       - name: Test
         run: cat filelist.txt
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: deep-soft/action-gh-release@v0.1.16
         if: startsWith(github.ref, 'refs/tags/')
         with:
           filelist: filelist.txt
