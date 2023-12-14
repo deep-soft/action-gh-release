@@ -38,7 +38,7 @@ jobs:
 
       - name: Publish artifact 1
         continue-on-error: true
-        uses: deep-soft/action-gh-release@v1
+        uses: deep-soft/action-gh-release@master
         with:
           draft: true
           tag_name: ${{ inputs.tag1 }}
@@ -72,10 +72,10 @@ jobs:
 
       - name: Publish artifact 2
         continue-on-error: true
-        uses: deep-soft/action-gh-release@v1
+        uses: deep-soft/action-gh-release@master
         with:
           draft: true
           tag_name: ${{ inputs.tag2 }}
+          filelist: the_file_list
           files: |
             ${{ env.ZIP_RELEASE_ARCHIVE }}
-            filelist: the_file_list
