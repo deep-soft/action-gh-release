@@ -51,10 +51,10 @@ export const parseInputFiles = (files: string): string[] => {
   );
 };
 
-export const parseInputListfile = (filelist: string, filelist: string): string[] => {
+export const parseInputListfile = (files: string, filelist: string): string[] => {
   let files_fromlist: string = '';
   files_fromlist = readFileSync(filelist).toString("utf8");
-  all_files = filelist + '\n' + files_fromlist;
+  all_files = files + '\n' + files_fromlist;
   return all_files.split(/\r?\n/).reduce<string[]>(
     (acc, line) =>
       acc
