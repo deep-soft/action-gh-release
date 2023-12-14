@@ -51,7 +51,7 @@ export const parseInputFiles = (files: string): string[] => {
   );
 };
 
-export const parseInputListfile = (filelist: string; filelist: string): string[] => {
+export const parseInputListfile = (filelist: string, filelist: string): string[] => {
   let files_fromlist: string = '';
   files_fromlist = readFileSync(filelist).toString("utf8");
   all_files = filelist + '\n' + files_fromlist;
