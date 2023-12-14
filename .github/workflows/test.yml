@@ -36,6 +36,12 @@ jobs:
           env_variable: ZIP_RELEASE_ARCHIVE
         # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
 
+      - name: Prepare artifact 1 list
+        continue-on-error: true
+        shell: bash
+        run: |
+          echo "${{ env.ZIP_RELEASE_ARCHIVE }}" >> the_file_list
+
       - name: Publish artifact 1
         continue-on-error: true
         uses: deep-soft/action-gh-release@master
@@ -44,12 +50,7 @@ jobs:
           tag_name: ${{ inputs.tag1 }}
           files: |
             ${{ env.ZIP_RELEASE_ARCHIVE }}
-
-      - name: Prepare artifact 1 list
-        continue-on-error: true
-        shell: bash
-        run: |
-          echo "${{ env.ZIP_RELEASE_ARCHIVE }}" >> the_file_list
+            the_file_list
 
       - name: Create archive 2
         continue-on-error: true
@@ -79,3 +80,4 @@ jobs:
           filelist: the_file_list
           files: |
             ${{ env.ZIP_RELEASE_ARCHIVE }}
+            the_file_list
