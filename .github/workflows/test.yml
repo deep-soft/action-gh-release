@@ -1,0 +1,81 @@
+# 2023-12-12 22:20
+name: test
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag1:
+        description: tag1
+        default: 'tag1'
+        required: true
+      tag2:
+        description: tag2
+        default: 'tag2'
+        required: true
+
+jobs:
+  test:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [windows-latest]
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Create archive 1
+        continue-on-error: true
+        uses: deep-soft/zip-release@v2
+        with:
+          type: 'zip'
+          filename: "${{ inputs.tag1 }}"
+          directory: '.'
+          exclusions: '*node_modules*'
+          recursive_exclusions: ''
+          path: './dist'
+          env_variable: ZIP_RELEASE_ARCHIVE
+        # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
+
+      - name: Publish artifact 1
+        continue-on-error: true
+        uses: deep-soft/action-gh-release@v1
+        with:
+          draft: true
+          tag_name: ${{ inputs.tag1 }}
+          files: |
+            ${{ env.ZIP_RELEASE_ARCHIVE }}
+
+      - name: Prepare artifact 1 list
+        continue-on-error: true
+        shell: bash
+        run: |
+          echo "${{ env.ZIP_RELEASE_ARCHIVE }}" >> the_file_list
+
+      - name: Create archive 2
+        continue-on-error: true
+        uses: deep-soft/zip-release@v2
+        with:
+          type: 'zip'
+          filename: "${{ inputs.tag2 }}"
+          directory: '.'
+          exclusions: '*node_modules*'
+          recursive_exclusions: ''
+          path: './src'
+          env_variable: ZIP_RELEASE_ARCHIVE
+        # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
+
+      - name: Prepare artifact 2 list
+        continue-on-error: true
+        shell: bash
+        run: |
+          echo "${{ env.ZIP_RELEASE_ARCHIVE }}" >> the_file_list
+
+      - name: Publish artifact 2
+        continue-on-error: true
+        uses: deep-soft/action-gh-release@v1
+        with:
+          draft: true
+          tag_name: ${{ inputs.tag2 }}
+          files: |
+            ${{ env.ZIP_RELEASE_ARCHIVE }}
+            filelist: the_file_list
