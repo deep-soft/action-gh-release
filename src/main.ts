@@ -22,7 +22,7 @@ async function run() {
     ) {
       throw new Error(`⚠️ GitHub Releases requires a tag`);
     }
-    if (_.isEmpty(config.input_filelist)) {
+    if (config.input_filelist.isEmpty) {
       console.log(`🤔 property filelist is empty.`);
     } else {
       console.log(`🤔 property filelist is not empty: ${config.input_filelist}`);
