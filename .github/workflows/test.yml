@@ -79,5 +79,4 @@ jobs:
           tag_name: ${{ inputs.tag2 }}
           filelist: the_file_list
           files: |
-            ${{ env.ZIP_RELEASE_ARCHIVE }}
             the_file_list
