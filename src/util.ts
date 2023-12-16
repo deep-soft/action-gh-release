@@ -67,7 +67,14 @@ export const parseInputListfile = (files: string, filelist: string): string[] =>
     );
   } else {
     // console.log(filelist " doesn't exists");
-    return [];
+    return files.split(/\r?\n/).reduce<string[]>(
+      (acc, line) =>
+        acc
+          .concat(line.split(","))
+          .filter((pat) => pat)
+          .map((pat) => pat.trim()),
+      []
+    );
   }
 };
 
