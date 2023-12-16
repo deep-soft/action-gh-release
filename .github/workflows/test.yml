@@ -12,6 +12,10 @@ on:
         description: tag2
         default: 'tag2'
         required: true
+      tag3:
+        description: tag3
+        default: 'tag3'
+        required: true
 
 jobs:
   test:
@@ -77,6 +81,14 @@ jobs:
         with:
           draft: true
           tag_name: ${{ inputs.tag2 }}
+          filelist: the_file_list
+
+      - name: Publish artifact 3
+        continue-on-error: true
+        uses: deep-soft/action-gh-release@master
+        with:
+          draft: true
+          tag_name: ${{ inputs.tag3 }}
           filelist: the_file_list
           files: |
             the_file_list
