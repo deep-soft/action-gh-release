@@ -1,5 +1,5 @@
 import * as glob from "glob";
-import { statSync, readFileSync } from "fs";
+import { statSync, existsSync, readFileSync } from "fs";
 
 export interface Config {
   github_token: string;
@@ -52,18 +52,23 @@ export const parseInputFiles = (files: string): string[] => {
 };
 
 export const parseInputListfile = (files: string, filelist: string): string[] => {
-  let files_fromlist: string = '';
-  files_fromlist = readFileSync(filelist).toString("utf8");
-  let all_files: string = '';
-  all_files = files + '\n' + files_fromlist;
-  return all_files.split(/\r?\n/).reduce<string[]>(
-    (acc, line) =>
-      acc
-        .concat(line.split(","))
-        .filter((pat) => pat)
-        .map((pat) => pat.trim()),
-    []
-  );
+  if (fs.existsSync(filelist)) {
+    let files_fromlist: string = '';
+    files_fromlist = readFileSync(filelist).toString("utf8");
+    let all_files: string = '';
+    all_files = files + '\n' + files_fromlist;
+    return all_files.split(/\r?\n/).reduce<string[]>(
+      (acc, line) =>
+        acc
+          .concat(line.split(","))
+          .filter((pat) => pat)
+          .map((pat) => pat.trim()),
+      []
+    );
+  } else {
+    // console.log(filelist " doesn't exists");
+    return [];
+  }
 };
 
 export const parseConfig = (env: Env): Config => {
