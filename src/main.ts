@@ -25,13 +25,13 @@ async function run() {
     if (!config.input_filelist) {
       console.log(`📦 property filelist is empty.`);
     } else {
-      console.log(`✔ property filelist is not empty: ${config.input_filelist}`);
+      console.log(`✔ property filelist is not empty: _${config.input_filelist}_`);
       config.input_files = config.input_filelist;
     }
     if (!config.input_files) {
       console.log(`📦 property files is empty.`);
     } else {
-      console.log(`✔ property files is not empty: ${config.input_files}`);
+      console.log(`✔ property files is not empty: _${config.input_files}_`);
       const patterns = unmatchedPatterns(config.input_files);
       patterns.forEach((pattern) =>
         console.warn(`⚠️ Pattern '${pattern}' does not match any files.`)
@@ -72,7 +72,7 @@ async function run() {
     if (config.input_files) {
       const files = paths(config.input_files);
       if (files.length == 0) {
-        console.warn(`🤔 ${config.input_files} not include valid file.`);
+        console.warn(`⚠️ ${config.input_files} not include valid file.`);
       }
       const currentAssets = rel.assets;
       const assets = await Promise.all(
