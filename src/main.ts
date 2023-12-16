@@ -23,18 +23,18 @@ async function run() {
       throw new Error(`⚠️ GitHub Releases requires a tag`);
     }
     if (!config.input_filelist) {
-      console.log(`🤔 property filelist is empty.`);
+      console.log(`📦 property filelist is empty.`);
     } else {
-      console.log(`🤔 property filelist is not empty: ${config.input_filelist}`);
+      console.log(`✔ property filelist is not empty: ${config.input_filelist}`);
       config.input_files = config.input_filelist;
     }
     if (!config.input_files) {
-      console.log(`🤔 property files is empty.`);
+      console.log(`📦 property files is empty.`);
     } else {
-      console.log(`🤔 property files is not empty: ${config.input_files}`);
+      console.log(`✔ property files is not empty: ${config.input_files}`);
       const patterns = unmatchedPatterns(config.input_files);
       patterns.forEach((pattern) =>
-        console.warn(`🤔 Pattern '${pattern}' does not match any files.`)
+        console.warn(`⚠️ Pattern '${pattern}' does not match any files.`)
       );
       if (patterns.length > 0 && config.input_fail_on_unmatched_files) {
         throw new Error(`⚠️ There were unmatched files`);
