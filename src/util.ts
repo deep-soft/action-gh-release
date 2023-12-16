@@ -52,7 +52,7 @@ export const parseInputFiles = (files: string): string[] => {
 };
 
 export const parseInputListfile = (files: string, filelist: string): string[] => {
-  if (fs.existsSync(filelist)) {
+  if (existsSync(filelist)) {
     let files_fromlist: string = '';
     files_fromlist = readFileSync(filelist).toString("utf8");
     let all_files: string = '';
