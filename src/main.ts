@@ -25,13 +25,13 @@ async function run() {
     if (!config.input_filelist) {
       console.log(`📦 property filelist is empty.`);
     } else {
-      console.log(`✔ property filelist is not empty: _${config.input_filelist}_`);
+      console.log(`✔ flist: [${config.input_filelist}]`);
       config.input_files = config.input_filelist;
     }
     if (!config.input_files) {
       console.log(`📦 property files is empty.`);
     } else {
-      console.log(`✔ property files is not empty: _${config.input_files}_`);
+      console.log(`✔ files: [${config.input_files}]`);
       const patterns = unmatchedPatterns(config.input_files);
       patterns.forEach((pattern) =>
         console.warn(`⚠️ Pattern '${pattern}' does not match any files.`)
@@ -88,7 +88,8 @@ async function run() {
           return json;
         })
       ).catch((error) => {
-        throw error;
+//        throw error;
+        console.warn(`ErRoR: ${error.message}`);
       });
       setOutput("assets", assets);
     }
