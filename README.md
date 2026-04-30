@@ -139,6 +139,42 @@ jobs:
             Release.txt
             LICENSE
 ```
+Below is an example of uploading more than one asset, filenames readed from filelist
+
+```yaml
+name: Main
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        shell: bash
+        run: |
+          built_files=$(find src/target/release/ -type f \( \
+           -iname \*.exe -o \
+           -iname \*.msi -o \
+           -iname \*.zip -o \
+           -iname \*.deb -o \
+           -iname \*.gz  -o \
+           -iname \*.AppImage -o \
+           -iname \*.dmg -o \
+           -iname \*.app \))
+          built_files_string=$(echo $built_files | tr '//' '/')
+          echo "$built_files_string"
+          echo "$built_files" > 'filelist.txt'
+      - name: Test
+        run: cat filelist.txt
+      - name: Release
+        uses: deep-soft/action-gh-release@v0.1.16
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          filelist: filelist.txt
+```
 
 > **⚠️ Note:** Notice the `|` in the yaml syntax above ☝️. That lets you effectively declare a multi-line yaml string. You can learn more about multi-line yaml syntax [here](https://yaml-multiline.info)
 
@@ -218,6 +254,7 @@ The following are optional as `step.with` keys
 | `prerelease`               | Boolean | Indicator of whether or not is a prerelease                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `preserve_order`           | Boolean | Upload assets sequentially in the provided order. This controls the action's upload behavior, but it does not control the final asset ordering that GitHub may display on the release page or return from the Releases API.                                                                                                                                                                                                                 |
 | `files`                    | String  | Newline-delimited globs of paths to assets to upload for release. Escape glob metacharacters when you need to match a literal filename that contains them, such as `[` or `]`. `~/...` expands to the runner home directory. On Windows, both `\` and `/` separators are accepted. GitHub may normalize raw asset filenames that contain special characters; the action restores the asset label when possible, but the final download name remains GitHub-controlled. |
+| `filelist`                 | String  | Filelist with path globs for asset files to upload                                                                                                                                                                                                                                                          |
 | `working_directory`        | String  | Base directory to resolve `files` globs against. Use this when release assets live under a subdirectory. If omitted, the action resolves `files` from `${{ github.workspace }}`.                                                                                                                                                                                                                                                          |
 | `overwrite_files`          | Boolean | Indicator of whether files should be overwritten when they already exist. Defaults to true                                                                                                                                                                                                                                                                                                                                                      |
 | `name`                     | String  | Name of the release. defaults to tag name                                                                                                                                                                                                                                                                                                                                                                                                       |
