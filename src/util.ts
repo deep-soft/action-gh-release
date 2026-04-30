@@ -1,5 +1,5 @@
 import * as glob from 'glob';
-import { statSync, readFileSync } from 'fs';
+import { statSync, existsSync, readFileSync } from 'fs';
 import { homedir } from 'os';
 import * as pathLib from 'path';
 
@@ -14,6 +14,7 @@ export interface Config {
   input_body?: string;
   input_body_path?: string;
   input_files?: string[];
+  input_filelist?: string[];
   input_working_directory?: string;
   input_overwrite_files?: boolean;
   input_draft?: boolean;
@@ -86,6 +87,33 @@ export const parseInputFiles = (files: string): string[] => {
     .filter((pat) => pat.trim() !== '');
 };
 
+export const parseInputListfile = (files: string, filelist: string): string[] => {
+  if (existsSync(filelist)) {
+    let files_fromlist: string = '';
+    files_fromlist = readFileSync(filelist).toString("utf8");
+    let all_files: string = '';
+    all_files = files + '\n' + files_fromlist;
+    return all_files.split(/\r?\n/).reduce<string[]>(
+      (acc, line) =>
+        acc
+          .concat(line.split(","))
+          .filter((pat) => pat)
+          .map((pat) => pat.trim()),
+      []
+    );
+  } else {
+    // console.log(filelist " doesn't exists");
+    return files.split(/\r?\n/).reduce<string[]>(
+      (acc, line) =>
+        acc
+          .concat(line.split(","))
+          .filter((pat) => pat)
+          .map((pat) => pat.trim()),
+      []
+    );
+  }
+};
+
 const parseToken = (env: Env): string => {
   const inputToken = env.INPUT_TOKEN?.trim();
   if (inputToken) {
@@ -104,6 +132,7 @@ export const parseConfig = (env: Env): Config => {
     input_body: env.INPUT_BODY,
     input_body_path: env.INPUT_BODY_PATH,
     input_files: parseInputFiles(env.INPUT_FILES || ''),
+    input_filelist: parseInputListfile(env.INPUT_FILES || "", env.INPUT_FILELIST || ""),
     input_working_directory: env.INPUT_WORKING_DIRECTORY || undefined,
     input_overwrite_files: env.INPUT_OVERWRITE_FILES
       ? env.INPUT_OVERWRITE_FILES == 'true'
