@@ -11,6 +11,12 @@ async function run() {
     if (!config.input_tag_name && !isTag(config.github_ref) && !config.input_draft) {
       throw new Error(`⚠️ GitHub Releases requires a tag`);
     }
+    if (!config.input_filelist) {
+      console.log(`📦 property filelist is empty.`);
+    } else {
+      console.log(`✔ flist: [${config.input_filelist}]`);
+      config.input_files = config.input_filelist;
+    }
     if (config.input_files) {
       const patterns = unmatchedPatterns(config.input_files, config.input_working_directory);
       patterns.forEach((pattern) => {
